@@ -72,9 +72,9 @@ public function store(Request $request)
         $attribute->save();
 
         // Redirect with a success message
-        return redirect()->route('mesurement-attribute.index')->with('success', __('Attribute Created Successfully.'));
+        return response()->json(['success' => true, 'message' => __('Attribute Created Successfully.')]);
     } else {
-        return redirect()->back()->with('error', __('Permission Denied.'));
+        return response()->json(['success' => false, 'message' => __('Permission Denied.')], 403);
     }
 }
 
@@ -110,9 +110,9 @@ public function update(Request $request, $id)
 
         $attribute->save();
 
-        return redirect()->route('mesurement-attribute.index')->with('success', __('Attribute Updated Successfully'));
+        return response()->json(['success' => true, 'message' => __('Attribute Updated Successfully')]);
     } else {
-        return redirect()->back()->with('error' , 'Permission Denied.');
+        return response()->json(['success' => false, 'message' => 'Permission Denied.'], 403);
     }
 }
 
@@ -157,9 +157,9 @@ public function subAttributestore(Request $request)
 
         $sub_category->save();
 
-        return redirect()->back()->with('success', __('Sub Attribute Created Successfully.'));
+        return response()->json(['success' => true, 'message' => __('Sub Attribute Created Successfully.')]);
     } else {
-        return redirect()->back()->with('error', __('Permission Denied.'));
+        return response()->json(['success' => false, 'message' => __('Permission Denied.')], 403);
     }
 }
 
@@ -194,9 +194,9 @@ public function subAttributeupdate(Request $request, $id)
         $mesaurement_sub_attribute->name = $request->name;
         $mesaurement_sub_attribute->save();
 
-        return redirect()->back()->with('success', __('Mesaurement Sub Attribute Updated Successfully'));
+        return response()->json(['success' => true, 'message' => __('Mesaurement Sub Attribute Updated Successfully')]);
     } else {
-        return redirect()->back()->with('error' , 'Permission Denied.');
+        return response()->json(['success' => false, 'message' => 'Permission Denied.'], 403);
     }
 }
 }

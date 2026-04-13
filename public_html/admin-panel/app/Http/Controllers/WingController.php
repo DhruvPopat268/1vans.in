@@ -82,9 +82,9 @@ class WingController extends Controller
             $wing->created_by = \Auth::user()->id;
             $wing->save();
 
-            return redirect()->route('wing.index')->with('success', __('Wing Created Successfully.'));
+            return response()->json(['success' => true, 'message' => __('Wing Created Successfully.')]);
         } else {
-            return redirect()->back()->with('error', __('Permission Denied.'));
+            return response()->json(['success' => false, 'message' => __('Permission Denied.')], 403);
         }
     }
 
@@ -127,9 +127,9 @@ public function update(Request $request, $id)
         $wing->name = $request->name;
         $wing->save();
 
-        return redirect()->route('wing.index')->with('success', __('Wing Updated Successfully'));
+        return response()->json(['success' => true, 'message' => __('Wing Updated Successfully')]);
     } else {
-        return redirect()->back()->with('error' , 'Permission Denied.');
+        return response()->json(['success' => false, 'message' => 'Permission Denied.'], 403);
     }
 }
 
@@ -175,9 +175,9 @@ public function flourstore(Request $request)
 
         $flour->save();
 
-        return redirect()->back()->with('success', __('Flour Created Successfully.'));
+        return response()->json(['success' => true, 'message' => __('Flour Created Successfully.')]);
     } else {
-        return redirect()->back()->with('error', __('Permission Denied.'));
+        return response()->json(['success' => false, 'message' => __('Permission Denied.')], 403);
     }
 }
 
@@ -207,9 +207,9 @@ public function flourupdate(Request $request, Flour $flour)
         $flour->name = $request->name;
         $flour->save();
 
-        return redirect()->back()->with('success', __('Flour Updated Successfully'));
+        return response()->json(['success' => true, 'message' => __('Flour Updated Successfully')]);
     } else {
-        return redirect()->back()->with('error', 'Permission Denied.');
+        return response()->json(['success' => false, 'message' => 'Permission Denied.'], 403);
     }
 }
 }

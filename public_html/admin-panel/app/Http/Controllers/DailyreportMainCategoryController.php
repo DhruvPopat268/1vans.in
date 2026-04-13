@@ -71,9 +71,9 @@ class DailyreportMainCategoryController extends Controller
         $maincategory->save();
 
         // Redirect with a success message
-        return redirect()->route('main-category.index')->with('success', __('Main Category Created Successfully.'));
+        return response()->json(['success' => true, 'message' => __('Main Category Created Successfully.')]);
     } else {
-        return redirect()->back()->with('error', __('Permission Denied.'));
+        return response()->json(['success' => false, 'message' => __('Permission Denied.')], 403);
     }
 }
 
@@ -118,9 +118,9 @@ public function update(Request $request, $id)
 
         $maincategory->save();
 
-        return redirect()->route('main-category.index')->with('success', __('Main Category Updated Successfully'));
+        return response()->json(['success' => true, 'message' => __('Main Category Updated Successfully')]);
     } else {
-        return redirect()->back()->with('error' , 'Permission Denied.');
+        return response()->json(['success' => false, 'message' => 'Permission Denied.'], 403);
     }
 }
 }
