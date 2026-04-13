@@ -79,9 +79,9 @@ class MaterialCategoryController extends Controller
             $materialcategory->created_by = \Auth::user()->id;
             $materialcategory->save();
 
-            return redirect()->route('material-category.index')->with('success', __('Material Category Created Successfully.'));
+            return response()->json(['success' => true, 'message' => __('Material Category Created Successfully.')]);
         } else {
-            return redirect()->back()->with('error', __('Permission Denied.'));
+            return response()->json(['success' => false, 'message' => __('Permission Denied.')], 403);
         }
     }
 
@@ -125,9 +125,9 @@ public function update(Request $request, $id)
         $materialcategory->name = $request->name;
         $materialcategory->save();
 
-        return redirect()->route('material-category.index')->with('success', __('Material Category Updated Successfully'));
+        return response()->json(['success' => true, 'message' => __('Material Category Updated Successfully')]);
     } else {
-        return redirect()->back()->with('error' , 'Permission Denied.');
+        return response()->json(['success' => false, 'message' => 'Permission Denied.'], 403);
     }
 }
 
@@ -178,9 +178,9 @@ public function subcategorystore(Request $request)
 
         $sub_category->save();
 
-        return redirect()->back()->with('success', __('Sub Category Created Successfully.'));
+        return response()->json(['success' => true, 'message' => __('Sub Category Created Successfully.')]);
     } else {
-        return redirect()->back()->with('error', __('Permission Denied.'));
+        return response()->json(['success' => false, 'message' => __('Permission Denied.')], 403);
     }
 }
 
@@ -215,9 +215,9 @@ public function subcategoryupdate(Request $request, $id)
         $material_sub_category->status = $request->status;
         $material_sub_category->save();
 
-        return redirect()->back()->with('success', __('Material Sub Category Updated Successfully'));
+        return response()->json(['success' => true, 'message' => __('Material Sub Category Updated Successfully')]);
     } else {
-        return redirect()->back()->with('error' , 'Permission Denied.');
+        return response()->json(['success' => false, 'message' => 'Permission Denied.'], 403);
     }
 }
 

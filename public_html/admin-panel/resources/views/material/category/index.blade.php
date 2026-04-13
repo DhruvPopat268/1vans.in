@@ -78,4 +78,49 @@
 @endsection
 
 @push('script-page')
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        var savedPage = localStorage.getItem('now_page_material_category');
+        if (savedPage) {
+            localStorage.removeItem('now_page_material_category');
+            var checkReady = setInterval(function () {
+                var pagers = document.querySelectorAll('.dataTable-pagination-list li');
+                if (pagers.length > 0) {
+                    clearInterval(checkReady);
+                    var targetPage = document.querySelector('.dataTable-pagination-list li [data-page="' + savedPage + '"]');
+                    if (targetPage) targetPage.click();
+                }
+            }, 100);
+        }
+    });
+
+    $(document).on('submit', '#commonModal form', function (e) {
+        var action = $(this).attr('action');
+        if (action && action.includes('material-category')) {
+            e.preventDefault();
+            var form = $(this);
+            var activePage = document.querySelector('.dataTable-pagination-list li.active [data-page]');
+            var pageNum = activePage ? activePage.getAttribute('data-page') : '1';
+            localStorage.setItem('now_page_material_category', pageNum);
+
+            $.ajax({
+                url: form.attr('action'),
+                type: 'POST',
+                data: form.serialize(),
+                success: function (res) {
+                    if (res.success) {
+                        $('#commonModal').modal('hide');
+                        show_toastr('Success', res.message, 'success');
+                        setTimeout(function () { location.reload(); }, 800);
+                    }
+                },
+                error: function (xhr) {
+                    localStorage.removeItem('now_page_material_category');
+                    var msg = xhr.responseJSON ? xhr.responseJSON.message : 'Something went wrong.';
+                    show_toastr('Error', msg, 'error');
+                }
+            });
+        }
+    });
+</script>
 @endpush

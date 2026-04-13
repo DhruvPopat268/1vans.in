@@ -87,9 +87,9 @@ public function update(Request $request, $id)
         $work_issue->status = $request->status;
         $work_issue->save();
 
-        return redirect()->route('work-issue.index')->with('success', __('Status Updated Successfully'));
+        return response()->json(['success' => true, 'message' => __('Status Updated Successfully')]);
     } else {
-        return redirect()->back()->with('error' , 'Permission Denied.');
+        return response()->json(['success' => false, 'message' => 'Permission Denied.'], 403);
     }
 }
 public function downloaWorkIssuedPdf($id)

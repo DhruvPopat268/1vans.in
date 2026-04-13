@@ -79,9 +79,9 @@ public function store(Request $request)
         $equipments->save();
 
         // Redirect with a success message
-        return redirect()->route('equipment.index')->with('success', __('Equipments Created Successfully.'));
+        return response()->json(['success' => true, 'message' => __('Equipments Created Successfully.')]);
     } else {
-        return redirect()->back()->with('error', __('Permission Denied.'));
+        return response()->json(['success' => false, 'message' => __('Permission Denied.')], 403);
     }
 }
 
@@ -122,9 +122,9 @@ public function update(Request $request, $id)
 
         $equipment->save();
 
-        return redirect()->route('equipment.index')->with('success', __('Equipment Updated Successfully'));
+        return response()->json(['success' => true, 'message' => __('Equipment Updated Successfully')]);
     } else {
-        return redirect()->back()->with('error' , 'Permission Denied.');
+        return response()->json(['success' => false, 'message' => 'Permission Denied.'], 403);
     }
 }
 
