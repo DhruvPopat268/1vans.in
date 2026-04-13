@@ -107,9 +107,9 @@ $work->end_date = $request->end_date;
         $work->save();
 
         // Redirect with a success message
-        return redirect()->route('name-of-work.index')->with('success', __('Name Of Work Created Successfully.'));
+        return response()->json(['success' => true, 'message' => __('Name Of Work Created Successfully.')]);
     } else {
-        return redirect()->back()->with('error', __('Permission Denied.'));
+        return response()->json(['success' => false, 'message' => __('Permission Denied.')], 403);
     }
 }
 
@@ -171,9 +171,9 @@ $work->end_date = $request->end_date;
 
         $work->save();
 
-        return redirect()->route('name-of-work.index')->with('success', __('Name Of Work Updated Successfully'));
+        return response()->json(['success' => true, 'message' => __('Name Of Work Updated Successfully')]);
     } else {
-        return redirect()->back()->with('error' , 'Permission Denied.');
+        return response()->json(['success' => false, 'message' => 'Permission Denied.'], 403);
     }
 }
 }
