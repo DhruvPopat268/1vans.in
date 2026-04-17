@@ -2780,61 +2780,90 @@ public function EngineerNotificationmarkAsRead(Request $request)
     ]);
 }
 
- public function AutoDexAttachmentUpload(Request $request)
- {
-      $request->validate([
+//  public function AutoDexAttachmentUpload(Request $request)
+//  {
+//       $request->validate([
+//         'auto_dex_id' => 'required|exists:auto_dexes,id',
+//         'file' => 'required|file',
+//       ]);
+
+//     try {
+//         $file = $request->file('file');
+//         $originalName = $file->getClientOriginalName();
+//         $fileName = $request->auto_dex_id . '_' . $originalName;
+
+//         // Save locally first
+//         $storedPath = $file->storeAs('autodex_attachment', $fileName, 'local');
+//         $filePath = storage_path('app/' . $storedPath);
+
+//         // Send saved file to external API
+//         $response = Http::attach(
+//             'modelFile',
+//             file_get_contents($filePath),
+//             $fileName
+//         )->post('https://auto.onevans.com/api/models');
+
+//         $viewerUrl = null;
+//         if ($response->successful()) {
+//             $viewerUrl = $response->json()['viewerUrl'] ?? null;
+//         }
+
+//         $attachment = \App\Models\AutoDexAttachments::create([
+//             'auto_dexes_id' => $request->auto_dex_id,
+//             'files' => $fileName,
+//             'created_by' => \Auth::user()->id,
+//             'view_url' => $viewerUrl,
+//             'created_user' => "Engineer",
+//         ]);
+
+//         return response()->json([
+//             'status' => 1,
+//             'message' => 'File uploaded successfully.',
+//             'data' => [
+//                 'file' => $attachment->files,
+//                 'view_url' => $attachment->view_url,
+//             ]
+//         ]);
+
+//     } catch (\Exception $e) {
+//         return response()->json([
+//             'status' => 0,
+//             'message' => 'Server error: ' . $e->getMessage(),
+//         ], 500);
+//     }
+// }
+
+public function AutoDexAttachmentUpload(Request $request)
+{
+    $request->validate([
         'auto_dex_id' => 'required|exists:auto_dexes,id',
         'file' => 'required|file',
-      ]);
+    ]);
 
     try {
         $file = $request->file('file');
+        $fileName = $request->auto_dex_id . '_' . $file->getClientOriginalName();
 
-        // Prepare file for HTTP upload
-        $response = Http::attach(
-            'modelFile',                // key expected by external API
-            file_get_contents($file),
-            $file->getClientOriginalName()
-        )->post('https://autocad-file-backend.onrender.com/api/models');
+        $file->storeAs('autodex_attachment', $fileName, 'local');
 
-        if ($response->successful()) {
-            $res = $response->json();
+        $fileUrl = asset('storage/autodex_attachment/' . $fileName);
 
-            // Save file locally (optional)
-            $originalName = $file->getClientOriginalName();
-            $fileName = $request->auto_dex_id . '_' . $originalName;
-            $path = 'autodex_attachment';
+        $attachment = \App\Models\AutoDexAttachments::create([
+            'auto_dexes_id' => $request->auto_dex_id,
+            'files' => $fileName,
+            'created_by' => \Auth::user()->id,
+            'view_url' => $fileUrl,
+            'created_user' => 'Engineer',
+        ]);
 
-            // Upload to storage/app/public/autodex_attachment
-            $storedPath = $file->storeAs($path, $fileName, 'local');
-
-            // Send file to external API (using absolute path)
-            $filePath = storage_path($storedPath);
-
-            // Save to database
-             $attachment = \App\Models\AutoDexAttachments::create([
-                'auto_dexes_id' => $request->auto_dex_id,
-                'files' => $fileName,
-                'created_by' => \Auth::user()->id,
-                'view_url' => $res['viewerUrl'] ?? null,
-                'created_user' => "Engineer",
-            ]);
-
-            return response()->json([
-                'status' => 1,
-                'message' => 'File uploaded successfully.',
-                'data' => [
-                    'file' => $attachment->files,
-                    'view_url' => $attachment->view_url,
-                ]
-            ]);
-        } else {
-            return response()->json([
-                'status' => 0,
-                'message' => 'Upload failed',
-                'error' => $response->body()
-            ], 500);
-        }
+        return response()->json([
+            'status' => 1,
+            'message' => 'File uploaded successfully.',
+            'data' => [
+                'file' => $attachment->files,
+                'view_url' => $attachment->view_url,
+            ]
+        ]);
 
     } catch (\Exception $e) {
         return response()->json([

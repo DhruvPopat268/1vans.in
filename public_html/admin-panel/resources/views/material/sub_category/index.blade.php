@@ -101,7 +101,7 @@
 
     $(document).on('submit', '#commonModal form', function (e) {
         var action = $(this).attr('action');
-        if (action && action.includes('materials-subcategory')) {
+        if (action && action.includes('material-subcategory')) {
             e.preventDefault();
             var form = $(this);
             var activePage = document.querySelector('.dataTable-pagination-list li.active [data-page]');
