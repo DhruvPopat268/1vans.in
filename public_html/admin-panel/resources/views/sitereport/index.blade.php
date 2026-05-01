@@ -41,7 +41,7 @@
                             <th scope="col">{{__('Date')}}</th>
                             <th scope="col">{{__('Name Of Work')}}</th>
                             <th scope="col">{{__('Work Description')}}</th>
-                            <th scope="col">{{__('Work Address')}}</th>
+                            <th scope="col">{{__('Work Location')}}</th>
                            <th scope="col">{{__('Created By')}}</th>
                         </tr>
                         </thead>
@@ -68,7 +68,7 @@
                                 <td>{{ $sitereports->name_of_work }}</td>
                                 <td>
                                     <span data-bs-toggle="tooltip" title="{{ $sitereports->work_description }}">
-                                            {{ Str::limit($sitereports->work_description, 100) }}
+                                        {{ Str::limit($sitereports->work_description, 100) }}
                                     </span>
                                 </td>
                                 <td>

@@ -27,8 +27,17 @@
                     <div class="col-md-6">
                         <p><strong>Date:</strong> {{ \Carbon\Carbon::parse($sitereport->date)->format('d-m-Y') }}</p>
                         <p><strong>Name Of Work:</strong> {{ $sitereport->name_of_work ?? '-' }}</p>
-                        <p><strong>Work Description:</strong> {{ $sitereport->work_description ?? 'N/A' }}</p>
-                        <p><strong>Work Address:</strong> {{ $sitereport->work_address ?? 'N/A' }}</p>
+                        <p><strong>Work Description:</strong><br>
+                            @if($sitereport->work_description)
+                                @foreach(explode(',', $sitereport->work_description) as $index => $line)
+                                    @if($index > 0)<hr style="margin:0; border-top:1px solid #ccc;">@endif
+                                    <div style="padding: 6px 0;">{{ trim($line) }}</div>
+                                @endforeach
+                            @else
+                                N/A
+                            @endif
+                        </p>
+                        <p><strong>Work Location:</strong> {{ $sitereport->work_address ?? 'N/A' }}</p>
                     </div>
 
                     {{-- <!-- Right Column -->

@@ -23,7 +23,7 @@
         }
 
         th {
-            background-color: #0d94898e;
+            background-color: #32327F;
             color: white;
         }
 
@@ -153,7 +153,7 @@
 
             <table>
                 <tr>
-                    <th colspan="2" style="text-align:center; background:#000; color:white;">
+                    <th colspan="2" style="text-align:center; background:#32327F; color:white;">
                         SITE REPORT DETAILS
                     </th>
                 </tr>
@@ -165,11 +165,19 @@
 
                 </tr>
                 <tr>
-                    <td colspan="2"><strong>Work Description:</strong> {{ $sitereport->work_description ?? '-' }}</td>
-
+                    <td colspan="2"><strong>Work Description:</strong><br>
+                        @if($sitereport->work_description)
+                            @foreach(explode(',', $sitereport->work_description) as $index => $line)
+                                @if($index > 0)<hr style="border:none; border-top:1px solid #ccc; margin:0;">@endif
+                                <div style="padding: 6px 0;">{{ trim($line) }}</div>
+                            @endforeach
+                        @else
+                            -
+                        @endif
+                    </td>
                 </tr>
                 <tr>
-                    <td colspan="2"><strong>Work Address:</strong> {{ $sitereport->work_address ?? '-' }}</td>
+                    <td colspan="2"><strong>Work Location:</strong> {{ $sitereport->work_address ?? '-' }}</td>
 
                 </tr>
                         <tr>
