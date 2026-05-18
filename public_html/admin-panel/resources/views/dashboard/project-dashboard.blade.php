@@ -1139,6 +1139,8 @@
         border-radius: 14px;
         padding: 25px;
         overflow-x: auto;
+        overflow-y: auto;
+        max-height: 600px;
         position: relative;
     }
 
@@ -1163,6 +1165,11 @@
         text-transform: uppercase;
         border-bottom: 1px solid #e5e7eb;
         margin-bottom: 6px;
+        position: sticky;
+        top: 0;
+        z-index: 10;
+        background: white;
+        box-shadow: 0 -40px 0 40px white, 0 1px 0 0 #e5e7eb;
     }
 
     /* GROUP GRID (IMPORTANT) */
@@ -1219,16 +1226,39 @@
     .gantt-progress-wrapper {
         position: relative;
         height: 26px;
-        background: #dbdcdd;
         border-radius: 6px;
         overflow: hidden;
         margin-top: 8px;
+    }
+
+    .gantt-progress-wrapper.status-planned {
+        background: #e2e8f0;
+    }
+
+    .gantt-progress-wrapper.status-in-progress {
+        background: #bae6fd;
+    }
+
+    .gantt-progress-wrapper.status-done {
+        background: #bbf7d0;
     }
 
     .gantt-progress-bar {
         height: 100%;
         border-radius: 6px;
         transition: width 0.4s ease;
+    }
+
+    .gantt-progress-wrapper.status-planned .gantt-progress-bar {
+        background: #94a3b8;
+    }
+
+    .gantt-progress-wrapper.status-in-progress .gantt-progress-bar {
+        background: #0ea5e9;
+    }
+
+    .gantt-progress-wrapper.status-done .gantt-progress-bar {
+        background: #22c55e;
     }
 
     .gantt-progress-label {
@@ -1239,6 +1269,7 @@
         font-size: 11px;
         font-weight: 600;
         white-space: nowrap;
+        color: #1e293b;
     }
 
     /* Divider */
@@ -1815,14 +1846,30 @@
             </div>
 
 
+            {{-- LEGEND --}}
+            <div class="d-flex align-items-center gap-3 px-3 pb-2" style="font-size:12px;">
+                <div class="d-flex align-items-center gap-1">
+                    <div style="width:14px;height:14px;border-radius:3px;background:#94a3b8;"></div>
+                    <span>Planned</span>
+                </div>
+                <div class="d-flex align-items-center gap-1">
+                    <div style="width:14px;height:14px;border-radius:3px;background:#0ea5e9;"></div>
+                    <span>In Progress</span>
+                </div>
+                <div class="d-flex align-items-center gap-1">
+                    <div style="width:14px;height:14px;border-radius:3px;background:#22c55e;"></div>
+                    <span>Done</span>
+                </div>
+            </div>
+
             <div class="gantt-wrapper">
 
                 {{-- HEADER --}}
                 <div class="gantt-group gantt-header">
                     <div>TYPES OF WORK</div>
                     <div>PHASE ({{ $home_data['selected_year'] }})</div>
-                    <div>PLANNED</div>
-                    <div>ACTUAL</div>
+                    <div>START DATE</div>
+                    <div>END DATE</div>
                     <div>DELAY</div>
 
                     <div class="text-center">JAN</div>
@@ -1871,14 +1918,14 @@
                         {{ $work->name }}
                     </div>
 
-                    {{-- PLANNED --}}
+                    {{-- START DATE --}}
                     <div class="gantt-days" style="grid-row: {{ $row }}">
-                        {{ $work->planned_days }} Day
+                        {{ $work->start_date_formatted }}
                     </div>
 
-                    {{-- ACTUAL --}}
+                    {{-- END DATE --}}
                     <div class="gantt-days" style="grid-row: {{ $row }}">
-                        {{ $work->actual_days }} Day
+                        {{ $work->end_date_formatted }}
                     </div>
 
                     {{-- DELAY --}}
@@ -1892,27 +1939,15 @@
                         grid-column: {{ $work->startMonth + 5 }} / span {{ $work->span }};
                      ">
 
-                        <div class="gantt-progress-wrapper">
+                        <div class="gantt-progress-wrapper
+                            @if($work->progress_percent >= 100) status-done
+                            @elseif($work->progress_percent > 0) status-in-progress
+                            @else status-planned
+                            @endif">
 
-                            <div class="gantt-progress-bar" style="
-                                width: {{ $work->progress_percent }}%;
-                                background: {{ generateColor($currentCategory) }};
-                             ">
-                            </div>
+                            <div class="gantt-progress-bar" style="width: {{ $work->progress_percent }}%;"></div>
 
-                            <span class="gantt-progress-label">
-
-                                {{ $work->progress_percent }}% –
-
-                                @if($work->progress_percent >= 100)
-                                Done
-                                @elseif($work->progress_percent > 0)
-                                In Progress
-                                @else
-                                Planned
-                                @endif
-
-                            </span>
+                            <span class="gantt-progress-label">{{ $work->progress_percent }}%</span>
 
                         </div>
                     </div>

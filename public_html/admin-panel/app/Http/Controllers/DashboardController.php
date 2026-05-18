@@ -444,6 +444,8 @@ class DashboardController extends Controller
                     $work->planned_days = $plannedDays;
                     $work->actual_days = $actualDays;
                     $work->delay_days = $delayDays;
+                    $work->start_date_formatted = $start->format('d M Y');
+                    $work->end_date_formatted = $end->format('d M Y');
                     $work->startMonth = $startMonth;
                     $work->span = $span;
 
